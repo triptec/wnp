@@ -7,8 +7,6 @@
 
   config = require('./../config');
 
-  app.get("/wnpc", function(req, res) {
-    return res.sendFile(config.wnpc.index_path);
-  });
+  app.get("/stream", function(req, res) {});
 
 }).call(this);

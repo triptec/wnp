@@ -1,7 +1,7 @@
 (function() {
   var app, config, path;
 
-  app = require('./../app');
+  app = require('./../app').app;
 
   path = require('path');
 

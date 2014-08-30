@@ -1,4 +1,4 @@
-app = require('./../app')
+app = require('./../app').app
 path = require('path')
 config = require('./../config')
 

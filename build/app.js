@@ -5,17 +5,9 @@
 
   app = express();
 
-  io = require('socket.io');
-
   path = require('path');
 
   config = require('./config');
-
-  module.exports = app;
-
-  ["wnpc"].forEach(function(route) {
-    return require("./routes/" + route);
-  });
 
   app.use('/assets/', express["static"](config.wnpc.assets_path));
 
@@ -24,13 +16,20 @@
     return console.log("Visit localhost:" + (server.address().port) + "/wnpc");
   });
 
-  io = io.listen(server);
+  io = require('socket.io').listen(server);
+
+  module.exports = {
+    app: app,
+    server: server,
+    io: io
+  };
+
+  ["wnpc"].forEach(function(route) {
+    return require("./routes/" + route);
+  });
 
   io.on("connection", function(socket) {
-    socket.emit("news", {
-      hello: "world"
-    });
-    socket.on("torrent", function(data) {
+    return socket.on("torrent", function(data) {
       console.log(data);
     });
   });

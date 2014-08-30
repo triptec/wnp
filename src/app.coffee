@@ -3,6 +3,7 @@
 # ==============================================
 express = require('express')
 app     = express()
+io      = require('socket.io')
 path    = require('path')
 config  = require('./config')
 
@@ -33,3 +34,14 @@ server = app.listen(3000, ->
   console.log "Who needs popcorn!"
   console.log "Visit localhost:#{server.address().port}/wnpc"
 )
+io = io.listen(server)
+
+io.on "connection", (socket) ->
+  socket.emit "news",
+    hello: "world"
+
+  socket.on "torrent", (data) ->
+    console.log data
+    return
+
+  return

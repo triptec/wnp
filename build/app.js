@@ -1,9 +1,11 @@
 (function() {
-  var app, config, express, path, server;
+  var app, config, express, io, path, server;
 
   express = require('express');
 
   app = express();
+
+  io = require('socket.io');
 
   path = require('path');
 
@@ -20,6 +22,17 @@
   server = app.listen(3000, function() {
     console.log("Who needs popcorn!");
     return console.log("Visit localhost:" + (server.address().port) + "/wnpc");
+  });
+
+  io = io.listen(server);
+
+  io.on("connection", function(socket) {
+    socket.emit("news", {
+      hello: "world"
+    });
+    socket.on("torrent", function(data) {
+      console.log(data);
+    });
   });
 
 }).call(this);

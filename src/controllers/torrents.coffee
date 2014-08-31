@@ -1,12 +1,14 @@
 store = require('./../store')
 torrents =
-  get: (link) ->
+  get: (link, socket) ->
     console.log "get #{link}"
-    store.get link, (err, infoHash) ->
+    store.get link, (err, torrent) ->
       if err
         console.log err
         return
-      console.log "GET IS DONE: ", infoHash
+      console.log "Emitting on #{torrent.infoHash}", torrent.torrent
+      socket.emit(torrent.infoHash, torrent.torrent)
+      console.log "GET IS DONE: ", torrent.infoHash
 
   pause: (infoHash) ->
     console.log "pausing " + infoHash

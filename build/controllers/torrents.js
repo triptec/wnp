@@ -4,14 +4,16 @@
   store = require('./../store');
 
   torrents = {
-    get: function(link) {
+    get: function(link, socket) {
       console.log("get " + link);
-      return store.get(link, function(err, infoHash) {
+      return store.get(link, function(err, torrent) {
         if (err) {
           console.log(err);
           return;
         }
-        return console.log("GET IS DONE: ", infoHash);
+        console.log("Emitting on " + torrent.infoHash, torrent.torrent);
+        socket.emit(torrent.infoHash, torrent.torrent);
+        return console.log("GET IS DONE: ", torrent.infoHash);
       });
     },
     pause: function(infoHash) {

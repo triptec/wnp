@@ -1,5 +1,5 @@
 (function() {
-  var config, engine, fs, readTorrent, store, _;
+  var config, data, engine, fs, readTorrent, store, _;
 
   fs = require("fs");
 
@@ -36,11 +36,12 @@
           }
           infoHash = torrent.infoHash;
           if (_this.torrents[infoHash]) {
-            return _this.torrents[infoHash];
+            done(null, _this.torrents[infoHash]);
+            return;
           }
           _this.torrents[infoHash] = engine(torrent);
           return _this.torrents[infoHash].once('ready', function() {
-            done(null, infoHash);
+            done(null, _this.torrents[infoHash]);
             return _this.save();
           });
         };
@@ -55,7 +56,9 @@
     }
   };
 
-  require(config.storage.path).forEach(function(infoHash) {
+  data = require(config.storage.path) || [];
+
+  data.forEach(function(infoHash) {
     return store.load(infoHash);
   });
 

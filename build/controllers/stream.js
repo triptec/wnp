@@ -11,17 +11,30 @@
 
   module.exports = {
     all: function(req, res) {
-      var engine, file, range;
-      engine = store.find(req.params.infoHash);
+      var engine, file, filepath, infoHash, range;
+      if (!(req.params.infoHash && req.params.filepath)) {
+        console.log("Error: missing one of infoHash: " + req.params.infoHash + " and filepath: " + req.params.filepath);
+        res.status(403).end();
+        return;
+      }
+      infoHash = req.params.infoHash.toLowerCase();
+      filepath = req.params.filepath;
+      engine = store.find(infoHash);
       if (!engine) {
-        console.log("Error: Couldn't find torrent with infoHash: " + req.params.infoHash + " and filepath: " + req.params.filepath);
+        console.log("Error: Couldn't find torrent with infoHash: " + infoHash + " and filepath: " + filepath);
         res.status(404).end();
         return;
       }
       file = _.find(engine.files, {
-        path: req.params.filepath
+        path: filepath
       });
-      range = rangeParser(file.length, req.headers.range)[0];
+      if (!file) {
+        console.log("Error: Couldn't find file in torrent with infoHash: " + infoHash + " and filepath: " + filepath);
+        res.status(404).end();
+        return;
+      }
+      range = req.headers.range;
+      range = range && rangeParser(file.length, req.headers.range)[0];
       res.setHeader('Accept-Ranges', 'bytes');
       res.setHeader('Content-Type', mime.lookup(file.name));
       req.connection.setTimeout(3600000);

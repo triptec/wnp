@@ -26,10 +26,11 @@ store =
         return done(err)
       infoHash = torrent.infoHash
       if @torrents[infoHash]
-        return @torrents[infoHash]
+        done(null, @torrents[infoHash])
+        return
       @torrents[infoHash] = engine(torrent) 
       @torrents[infoHash].once 'ready', =>
-        done(null, infoHash)
+        done(null, @torrents[infoHash])
         @save()
     )
 
@@ -39,7 +40,8 @@ store =
 
     fs.writeFileSync(config.storage.path, JSON.stringify(state), "utf8")
 
-require(config.storage.path).forEach (infoHash) ->
+data = require(config.storage.path) || []
+data.forEach (infoHash) ->
   store.load(infoHash)
 
 module.exports = store

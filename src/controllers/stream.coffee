@@ -5,17 +5,29 @@ mime        = require('mime')
 
 module.exports = 
   all: (req, res) ->
-    engine = store.find(req.params.infoHash)
+    unless req.params.infoHash && req.params.filepath
+      console.log "Error: missing one of infoHash: #{req.params.infoHash} and filepath: #{req.params.filepath}"
+      res.status(403).end()
+      return
+
+    infoHash = req.params.infoHash.toLowerCase()
+    filepath = req.params.filepath
+    engine = store.find(infoHash)
 
     # Return 404 if torrent doesn't exist in store
     unless engine
-      console.log "Error: Couldn't find torrent with infoHash: #{req.params.infoHash} and filepath: #{req.params.filepath}"
+      console.log "Error: Couldn't find torrent with infoHash: #{infoHash} and filepath: #{filepath}"
       res.status(404).end()
       return
 
-    file = _.find engine.files, { path: req.params.filepath }
 
-    range = rangeParser(file.length, req.headers.range)[0]
+    file = _.find engine.files, { path: filepath }
+    unless file
+      console.log "Error: Couldn't find file in torrent with infoHash: #{infoHash} and filepath: #{filepath}"
+      res.status(404).end()
+      return
+    range = req.headers.range
+    range = range && rangeParser(file.length, req.headers.range)[0]
 
     # Set headers
     res.setHeader('Accept-Ranges', 'bytes')

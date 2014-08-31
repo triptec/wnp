@@ -5,7 +5,8 @@ torrents  = require('./../controllers/torrents').torrents
 
 module.exports = (io) ->
   io.sockets.on "connection", (socket) ->
-    socket.on "torrent_get", torrents.get
+    socket.on "torrent_get", (link)->
+      torrents.get(link, socket)
 
     socket.on "torrent_pause", torrents.pause
 

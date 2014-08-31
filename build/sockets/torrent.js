@@ -9,7 +9,9 @@
 
   module.exports = function(io) {
     return io.sockets.on("connection", function(socket) {
-      socket.on("torrent_get", torrents.get);
+      socket.on("torrent_get", function(link) {
+        return torrents.get(link, socket);
+      });
       socket.on("torrent_pause", torrents.pause);
       socket.on("torrent_resume", torrents.resume);
       socket.on("torrent_select", torrents.select);

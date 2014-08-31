@@ -18,6 +18,7 @@ server = app.listen(3000, ->
 )
 
 io = require('socket.io').listen(server)
+io.set 'log level', 2
 
 # ==============================================
 # Exports
@@ -38,7 +39,11 @@ module.exports =
   require("./routes/#{route}")
 )
 
-io.on "connection", (socket) ->
-  socket.on "torrent", (data) ->
-    console.log data
-    return
+# ==============================================
+# Sockets
+# ==============================================
+[
+  "torrent"
+].forEach((socket_route) ->
+  require("./sockets/#{socket_route}")(io)
+)

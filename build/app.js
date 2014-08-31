@@ -22,6 +22,8 @@
 
   io = require('socket.io').listen(server);
 
+  io.set('log level', 2);
+
   module.exports = {
     app: app,
     server: server,
@@ -32,10 +34,8 @@
     return require("./routes/" + route);
   });
 
-  io.on("connection", function(socket) {
-    return socket.on("torrent", function(data) {
-      console.log(data);
-    });
+  ["torrent"].forEach(function(socket_route) {
+    return require("./sockets/" + socket_route)(io);
   });
 
 }).call(this);

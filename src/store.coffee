@@ -9,18 +9,24 @@ unless fs.existsSync(config.storage.path)
   }), "utf8")
 
 module.exports =
-  data: require('./../store.json')
-  
-  find: (type, attrs) ->
-    results = _.where(@data[type], attrs)
+  find: (type, data) ->
+    storage = @get_storage()
+    results = _.where(storage[type], data)
     if results.length > 0
       results[0]
     else
       false
 
-  create: (type, attrs) ->
-    @data[type].push attrs
-    @save()
+  create: (type, data) ->
+    storage = @get_storage()
+    if storage[type]
+      storage[type].push data
+      @save(storage)
+    else
+      console.log "#{type} type doesn't exist"
 
-  save: ->
-    fs.writeFile(config.storage.path, JSON.stringify(@data), "utf8")
+  save: (storage) ->
+    fs.writeFileSync(config.storage.path, JSON.stringify(storage), "utf8")
+
+  get_storage: ->
+    require(config.storage.path)

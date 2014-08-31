@@ -33,6 +33,7 @@ module.exports =
 [
   "wnpc"
   "api"
+  "stream"
 ].forEach((route) ->
   require("./routes/#{route}")
 )

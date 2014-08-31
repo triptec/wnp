@@ -28,7 +28,7 @@
     io: io
   };
 
-  ["wnpc", "api"].forEach(function(route) {
+  ["wnpc", "api", "stream"].forEach(function(route) {
     return require("./routes/" + route);
   });
 

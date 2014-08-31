@@ -13,11 +13,7 @@ module.exports =
       res.status(404).end()
       return
 
-    #console.log req.params.filepath
-    #file = _.find engine.files, { path: req.params.filepath }
-    engine.files.forEach (item) ->
-      if item.path == req.params.infoHash
-        file = item
+    file = _.find engine.files, { path: req.params.filepath }
 
     range = rangeParser(file.length, req.headers.range)[0]
 

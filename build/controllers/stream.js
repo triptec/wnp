@@ -11,18 +11,15 @@
 
   module.exports = {
     all: function(req, res) {
-      var engine, range;
+      var engine, file, range;
       engine = store.find(req.params.infoHash);
       if (!engine) {
         console.log("Error: Couldn't find torrent with infoHash: " + req.params.infoHash + " and filepath: " + req.params.filepath);
         res.status(404).end();
         return;
       }
-      engine.files.forEach(function(item) {
-        var file;
-        if (item.path === req.params.infoHash) {
-          return file = item;
-        }
+      file = _.find(engine.files, {
+        path: req.params.filepath
       });
       range = rangeParser(file.length, req.headers.range)[0];
       res.setHeader('Accept-Ranges', 'bytes');

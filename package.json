@@ -12,7 +12,9 @@
     "type": "git"
   },
   "dependencies": {
+    "cors": "^2.4.1",
     "express": "^4.8.7",
+    "request": "^2.40.0",
     "socket.io": "^1.0.6",
     "wnpc": "0.0.2"
   },

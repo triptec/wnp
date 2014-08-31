@@ -1,5 +1,5 @@
 (function() {
-  var app, config, express, io, path, server;
+  var app, config, cors, express, io, path, server;
 
   express = require('express');
 
@@ -9,7 +9,11 @@
 
   config = require('./config');
 
+  cors = require('cors');
+
   app.use('/assets/', express["static"](config.wnpc.assets_path));
+
+  app.use(cors());
 
   server = app.listen(3000, function() {
     console.log("Who needs popcorn!");
@@ -24,7 +28,7 @@
     io: io
   };
 
-  ["wnpc"].forEach(function(route) {
+  ["wnpc", "api"].forEach(function(route) {
     return require("./routes/" + route);
   });
 

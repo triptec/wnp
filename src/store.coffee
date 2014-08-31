@@ -1,32 +1,45 @@
 fs     = require("fs")
 config = require('./config')
 _      = require('lodash')
+engine = require('./engine')
+readTorrent = require('read-torrent')
 
 # Check if storage exist, otherwise create it
 unless fs.existsSync(config.storage.path)
-  fs.writeFileSync(config.storage.path, JSON.stringify({
-    torrents: []
-  }), "utf8")
+  fs.writeFileSync(config.storage.path, JSON.stringify([]), "utf8")
 
-module.exports =
-  find: (type, data) ->
-    storage = @get_storage()
-    results = _.where(storage[type], data)
-    if results.length > 0
-      results[0]
+store =
+  torrents: {}
+
+  load: (infoHash) ->
+    @torrents[infoHash] = engine('magnet:?xt=urn:btih:' + infoHash)
+
+  find: (infoHash) ->
+    if @torrents[infoHash]
+      return @torrents[infoHash] 
     else
-      false
+      return false
 
-  create: (type, data) ->
-    storage = @get_storage()
-    if storage[type]
-      storage[type].push data
-      @save(storage)
-    else
-      console.log "#{type} type doesn't exist"
+  get: (link, done) ->
+    readTorrent(link, (err, torrent) =>
+      if err
+        return done(err)
+      infoHash = torrent.infoHash
+      if @torrents[infoHash]
+        return @torrents[infoHash]
+      @torrents[infoHash] = engine(torrent) 
+      @torrents[infoHash].once 'ready', =>
+        done(null, infoHash)
+        @save()
+    )
 
-  save: (storage) ->
-    fs.writeFileSync(config.storage.path, JSON.stringify(storage), "utf8")
+  save: () ->
+    state = Object.keys(@torrents).map (infoHash)->
+      infoHash
 
-  get_storage: ->
-    require(config.storage.path)
+    fs.writeFileSync(config.storage.path, JSON.stringify(state), "utf8")
+
+require(config.storage.path).forEach (infoHash) ->
+  store.load(infoHash)
+
+module.exports = store

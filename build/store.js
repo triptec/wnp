@@ -1,5 +1,5 @@
 (function() {
-  var config, fs, _;
+  var config, engine, fs, readTorrent, store, _;
 
   fs = require("fs");
 
@@ -7,39 +7,58 @@
 
   _ = require('lodash');
 
+  engine = require('./engine');
+
+  readTorrent = require('read-torrent');
+
   if (!fs.existsSync(config.storage.path)) {
-    fs.writeFileSync(config.storage.path, JSON.stringify({
-      torrents: []
-    }), "utf8");
+    fs.writeFileSync(config.storage.path, JSON.stringify([]), "utf8");
   }
 
-  module.exports = {
-    find: function(type, data) {
-      var results, storage;
-      storage = this.get_storage();
-      results = _.where(storage[type], data);
-      if (results.length > 0) {
-        return results[0];
+  store = {
+    torrents: {},
+    load: function(infoHash) {
+      return this.torrents[infoHash] = engine('magnet:?xt=urn:btih:' + infoHash);
+    },
+    find: function(infoHash) {
+      if (this.torrents[infoHash]) {
+        return this.torrents[infoHash];
       } else {
         return false;
       }
     },
-    create: function(type, data) {
-      var storage;
-      storage = this.get_storage();
-      if (storage[type]) {
-        storage[type].push(data);
-        return this.save(storage);
-      } else {
-        return console.log("" + type + " type doesn't exist");
-      }
+    get: function(link, done) {
+      return readTorrent(link, (function(_this) {
+        return function(err, torrent) {
+          var infoHash;
+          if (err) {
+            return done(err);
+          }
+          infoHash = torrent.infoHash;
+          if (_this.torrents[infoHash]) {
+            return _this.torrents[infoHash];
+          }
+          _this.torrents[infoHash] = engine(torrent);
+          return _this.torrents[infoHash].once('ready', function() {
+            done(null, infoHash);
+            return _this.save();
+          });
+        };
+      })(this));
     },
-    save: function(storage) {
-      return fs.writeFileSync(config.storage.path, JSON.stringify(storage), "utf8");
-    },
-    get_storage: function() {
-      return require(config.storage.path);
+    save: function() {
+      var state;
+      state = Object.keys(this.torrents).map(function(infoHash) {
+        return infoHash;
+      });
+      return fs.writeFileSync(config.storage.path, JSON.stringify(state), "utf8");
     }
   };
+
+  require(config.storage.path).forEach(function(infoHash) {
+    return store.load(infoHash);
+  });
+
+  module.exports = store;
 
 }).call(this);

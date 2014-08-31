@@ -5,7 +5,14 @@
 
   torrents = {
     get: function(link) {
-      return console.log("get " + link);
+      console.log("get " + link);
+      return store.get(link, function(err, infoHash) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        return console.log("GET IS DONE: ", infoHash);
+      });
     },
     pause: function(infoHash) {
       var torrent;

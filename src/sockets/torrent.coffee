@@ -1,10 +1,9 @@
-"use strict"
-module.exports = (io) ->
-  _ = require('lodash')
-  #progress = require("./progressbar")
-  store = require('./../store')
-  torrents = require('./../controllers/torrents').torrents
+_         = require('lodash')
+#progress = require("./progressbar")
+store     = require('./../store')
+torrents  = require('./../controllers/torrents').torrents
 
+module.exports = (io) ->
   io.sockets.on "connection", (socket) ->
     socket.on "torrent_get", torrents.get
 

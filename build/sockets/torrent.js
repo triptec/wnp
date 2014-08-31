@@ -1,10 +1,13 @@
 (function() {
-  "use strict";
+  var store, torrents, _;
+
+  _ = require('lodash');
+
+  store = require('./../store');
+
+  torrents = require('./../controllers/torrents').torrents;
+
   module.exports = function(io) {
-    var store, torrents, _;
-    _ = require('lodash');
-    store = require('./../store');
-    torrents = require('./../controllers/torrents').torrents;
     return io.sockets.on("connection", function(socket) {
       socket.on("torrent_get", torrents.get);
       socket.on("torrent_pause", torrents.pause);

@@ -8,10 +8,8 @@ module.exports = (torrent) ->
 
   engine = torrentStream(torrent, options)
 
-  engine.once 'ready', ->
-    engine.torrent.ready = true
-
   engine.once 'destroyed', ->
     engine.removeAllListeners()
+    console.log "Engine destroyed!"
 
   return engine

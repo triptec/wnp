@@ -11,6 +11,7 @@ cors    = require('cors')
 # ==============================================
 app.use('/assets/', express.static(config.wnpc.assets_path))
 app.use(cors())
+
 # Start server
 server = app.listen(3000, ->
   console.log "Who needs popcorn!"

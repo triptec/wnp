@@ -13,11 +13,9 @@
       tmp: config.tmp_path
     };
     engine = torrentStream(torrent, options);
-    engine.once('ready', function() {
-      return engine.torrent.ready = true;
-    });
     engine.once('destroyed', function() {
-      return engine.removeAllListeners();
+      engine.removeAllListeners();
+      return console.log("Engine destroyed!");
     });
     return engine;
   };

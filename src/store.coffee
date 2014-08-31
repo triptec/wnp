@@ -35,9 +35,7 @@ store =
     )
 
   save: () ->
-    state = Object.keys(@torrents).map (infoHash)->
-      infoHash
-
+    state = _.keys(@torrents)
     fs.writeFileSync(config.storage.path, JSON.stringify(state), "utf8")
 
 data = require(config.storage.path) || []

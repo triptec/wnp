@@ -49,9 +49,7 @@
     },
     save: function() {
       var state;
-      state = Object.keys(this.torrents).map(function(infoHash) {
-        return infoHash;
-      });
+      state = _.keys(this.torrents);
       return fs.writeFileSync(config.storage.path, JSON.stringify(state), "utf8");
     }
   };

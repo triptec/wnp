@@ -18,7 +18,13 @@
   store = {
     torrents: {},
     load: function(infoHash) {
-      return this.torrents[infoHash] = engine('magnet:?xt=urn:btih:' + infoHash);
+      var e;
+      e = engine('magnet:?xt=urn:btih:' + infoHash);
+      return e.on('ready', (function(_this) {
+        return function() {
+          return _this.torrents[infoHash] = e;
+        };
+      })(this));
     },
     find: function(infoHash) {
       if (this.torrents[infoHash]) {
@@ -30,7 +36,7 @@
     get: function(link, done) {
       return readTorrent(link, (function(_this) {
         return function(err, torrent) {
-          var infoHash;
+          var e, infoHash;
           if (err) {
             return done(err);
           }
@@ -39,8 +45,9 @@
             done(null, _this.torrents[infoHash]);
             return;
           }
-          _this.torrents[infoHash] = engine(torrent);
-          return _this.torrents[infoHash].once('ready', function() {
+          e = engine(torrent);
+          return e.once('ready', function() {
+            _this.torrents[infoHash] = e;
             done(null, _this.torrents[infoHash]);
             return _this.save();
           });

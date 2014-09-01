@@ -13,7 +13,7 @@ store =
 
   load: (infoHash) ->
     e = engine('magnet:?xt=urn:btih:' + infoHash)
-    e.on 'ready', =>
+    e.once 'ready', =>
       @torrents[infoHash] = e
 
   find: (infoHash) ->
@@ -34,7 +34,7 @@ store =
       e = engine(torrent)
       e.once 'ready', =>
         @torrents[infoHash] = e
-        done(null, @torrents[infoHash])
+        done(null, e)
         @save()
     )
 

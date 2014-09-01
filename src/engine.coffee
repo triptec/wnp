@@ -8,8 +8,23 @@ module.exports = (torrent) ->
 
   engine = torrentStream(torrent, options)
 
+  engine.once 'ready', ->
+    console.log "Torrent ready: #{engine.infoHash}"
+
+  engine.once 'verifying', ->
+    console.log("verifying: #{engine.infoHash}");
+
   engine.once 'destroyed', ->
     engine.removeAllListeners()
     console.log "Engine destroyed!"
+
+  engine.on 'uninterested', ->
+    console.log("Uninterested: #{engine.infoHash}")
+
+  engine.on 'interested', ->
+    console.log("Interested: #{engine.infoHash}")
+
+  engine.on 'error', (err) ->
+    console.log("Error #{engine.infoHash}: #{e}")
 
   return engine

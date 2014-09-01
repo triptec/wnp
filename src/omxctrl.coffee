@@ -1,7 +1,7 @@
 exec = require("child_process").exec
 EventEmitter = require("events").EventEmitter
 util = require("util")
-defaults = ["-o hdmi"]
+defaults = ["-b -r -o hdmi"]
 STATES =
   PLAYING: 0
   PAUSED: 1
@@ -88,7 +88,7 @@ omx::pause = ->
   return
 
 omx::kill = ->
-  @player.kill('SIGKILL')
+  @player.stop()
 
 # build some nice methods for interacting
 # with the player

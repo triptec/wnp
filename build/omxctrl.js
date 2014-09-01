@@ -7,7 +7,7 @@
 
   util = require("util");
 
-  defaults = ["-o hdmi"];
+  defaults = ["-b -r -o hdmi"];
 
   STATES = {
     PLAYING: 0,
@@ -92,7 +92,7 @@
   };
 
   omx.prototype.kill = function() {
-    return this.player.kill('SIGKILL');
+    return this.player.stop();
   };
 
   _fn = function(key) {

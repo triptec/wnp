@@ -6,24 +6,24 @@ torrents =
       if err
         console.log err
         return
-      console.log "Emitting on #{torrent.infoHash}", torrent.torrent
+      console.log "Emitting on #{torrent.infoHash}"
       socket.emit(torrent.infoHash, torrent.torrent)
       console.log "GET IS DONE: ", torrent.infoHash
 
   pause: (infoHash) ->
     console.log "pausing " + infoHash
-    torrent = store.get(infoHash)
+    torrent = store.find(infoHash)
     torrent.swarm.pause()  if torrent and torrent.swarm
     return
   resume: (infoHash) ->
     console.log "resuming " + infoHash
-    torrent = store.get(infoHash)
+    torrent = store.find(infoHash)
     torrent.swarm.resume()  if torrent and torrent.swarm
     return
 
   select: (infoHash, file) ->
     console.log "selected " + infoHash + "/" + file
-    torrent = store.get(infoHash)
+    torrent = store.find(infoHash)
     if torrent and torrent.files
       file = torrent.files[file]
       file.select()
@@ -32,7 +32,7 @@ torrents =
 
   deselect: (infoHash, file) ->
     console.log "deselected " + infoHash + "/" + file
-    torrent = store.get(infoHash)
+    torrent = store.find(infoHash)
     if torrent and torrent.files
       file = torrent.files[file]
       file.deselect()

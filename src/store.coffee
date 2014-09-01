@@ -12,9 +12,10 @@ store =
   torrents: {}
 
   load: (infoHash) ->
-    e = engine('magnet:?xt=urn:btih:' + infoHash)
-    e.once 'ready', =>
-      @torrents[infoHash] = e
+    unless @torrents[infoHash]
+      e = engine('magnet:?xt=urn:btih:' + infoHash)
+      e.once 'ready', =>
+        @torrents[infoHash] = e
 
   find: (infoHash) ->
     if @torrents[infoHash]

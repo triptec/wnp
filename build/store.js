@@ -19,12 +19,14 @@
     torrents: {},
     load: function(infoHash) {
       var e;
-      e = engine('magnet:?xt=urn:btih:' + infoHash);
-      return e.on('ready', (function(_this) {
-        return function() {
-          return _this.torrents[infoHash] = e;
-        };
-      })(this));
+      if (!this.torrents[infoHash]) {
+        e = engine('magnet:?xt=urn:btih:' + infoHash);
+        return e.once('ready', (function(_this) {
+          return function() {
+            return _this.torrents[infoHash] = e;
+          };
+        })(this));
+      }
     },
     find: function(infoHash) {
       if (this.torrents[infoHash]) {
@@ -48,7 +50,7 @@
           e = engine(torrent);
           return e.once('ready', function() {
             _this.torrents[infoHash] = e;
-            done(null, _this.torrents[infoHash]);
+            done(null, e);
             return _this.save();
           });
         };

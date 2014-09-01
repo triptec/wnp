@@ -45,6 +45,7 @@ module.exports =
 # ==============================================
 [
   "torrent"
+  "player"
 ].forEach((socket_route) ->
   require("./sockets/#{socket_route}")(io)
 )

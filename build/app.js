@@ -34,7 +34,7 @@
     return require("./routes/" + route);
   });
 
-  ["torrent"].forEach(function(socket_route) {
+  ["torrent", "player"].forEach(function(socket_route) {
     return require("./sockets/" + socket_route)(io);
   });
 

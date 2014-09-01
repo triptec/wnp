@@ -88,7 +88,7 @@ omx::pause = ->
   return
 
 omx::kill = ->
-  @player.stop()
+  @stop()
 
 # build some nice methods for interacting
 # with the player

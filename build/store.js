@@ -56,6 +56,16 @@
         };
       })(this));
     },
+    remove: function(infoHash) {
+      var torrent;
+      torrent = torrents[infoHash];
+      torrent.destroy();
+      torrent.remove(false, function() {
+        return console.log("Torrent: " + infoHash + " destroyed");
+      });
+      delete torrents[infoHash];
+      return this.save();
+    },
     save: function() {
       var state;
       state = _.keys(this.torrents);

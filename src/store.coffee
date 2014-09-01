@@ -39,6 +39,15 @@ store =
         @save()
     )
 
+  remove: (infoHash) ->
+    torrent = torrents[infoHash]
+    torrent.destroy() # Destroys all connections to peers
+    # Remove torrent and all of it's data (cache, tmp, downloaded pieces)
+    torrent.remove false, ->
+      console.log "Torrent: #{infoHash} destroyed"
+    delete torrents[infoHash]
+    @save()
+
   save: () ->
     state = _.keys(@torrents)
     fs.writeFileSync(config.storage.path, JSON.stringify(state), "utf8")

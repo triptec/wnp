@@ -92,7 +92,7 @@
   };
 
   omx.prototype.kill = function() {
-    return this.player.stop();
+    return this.stop();
   };
 
   _fn = function(key) {

@@ -1,6 +1,7 @@
 var gulp    = require('gulp');
 var coffee  = require('gulp-coffee');
 var del     = require('del');
+var nodemon = require('gulp-nodemon');
 
 var paths = {
   scripts: ['src/**/*.coffee']
@@ -17,5 +18,9 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('serve', function() {
-  gulp.watch(paths.scripts, ['scripts']);
+  nodemon({ script: 'wnp-cli.js', ext: 'coffee', ignore: ['node_modules/**/*'] })
+    .on('change', ['scripts'])
+    .on('restart', function() {
+      console.log('restarted!');
+    });
 });

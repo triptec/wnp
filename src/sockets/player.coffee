@@ -1,5 +1,5 @@
 os = require('os')
-if os.arch() == 'arm6h'
+if os.arch() == 'arm'
   player = require('./../omxctrl')
 if os.platform() == 'darwin'
   player = require('./../vlcctrl')

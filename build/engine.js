@@ -30,7 +30,7 @@
       return console.log("Interested: " + engine.infoHash);
     });
     engine.on('error', function(err) {
-      return console.log("Error " + engine.infoHash + ": " + e);
+      return console.log("Error " + engine.infoHash + ": " + err);
     });
     return engine;
   };

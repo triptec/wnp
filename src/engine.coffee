@@ -25,6 +25,6 @@ module.exports = (torrent) ->
     console.log("Interested: #{engine.infoHash}")
 
   engine.on 'error', (err) ->
-    console.log("Error #{engine.infoHash}: #{e}")
+    console.log("Error #{engine.infoHash}: #{err}")
 
   return engine

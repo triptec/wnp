@@ -1,5 +1,5 @@
 (function() {
-  var app, config, cors, express, io, path, server;
+  var app, config, cors, express, io, path, server, ws, ws_server;
 
   express = require('express');
 
@@ -22,7 +22,9 @@
 
   io = require('socket.io').listen(server);
 
-  io.set('log level', 2);
+  ws = require('websocket.io');
+
+  ws_server = ws.attach(server);
 
   module.exports = {
     app: app,
@@ -36,6 +38,19 @@
 
   ["torrent", "player"].forEach(function(socket_route) {
     return require("./sockets/" + socket_route)(io);
+  });
+
+  ws_server.on('connection', function(client) {
+    client.on('message', function() {
+      return console.log('ws on message:', arguments);
+    });
+    client.on('close', function() {
+      return console.log('ws on close', arguments);
+    });
+    client.on('error', function() {
+      return console.log('ws on error:', arguments);
+    });
+    return client.send('Hello there my frined');
   });
 
 }).call(this);

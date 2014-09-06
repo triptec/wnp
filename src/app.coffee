@@ -6,6 +6,7 @@ app     = express()
 path    = require('path')
 config  = require('./config')
 cors    = require('cors')
+vacuum  = require('./vacuum')
 # ==============================================
 # Server
 # ==============================================

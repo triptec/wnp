@@ -1,5 +1,5 @@
 (function() {
-  var app, config, cors, express, io, path, server, ws, ws_server;
+  var app, config, cors, express, io, path, server, vacuum, ws, ws_server;
 
   express = require('express');
 
@@ -10,6 +10,8 @@
   config = require('./config');
 
   cors = require('cors');
+
+  vacuum = require('./vacuum');
 
   app.use('/assets/', express["static"](config.wnpc.assets_path));
 

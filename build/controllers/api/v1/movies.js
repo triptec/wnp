@@ -11,7 +11,13 @@
       }, function(err, response, body) {
         var data;
         data = JSON.parse(body);
-        data.movies = data.MovieList;
+        data.movies = data.MovieList.map(function(movie) {
+          movie.items = movie.items.map(function(torrent) {
+            torrent.movie = movie.id;
+            return torrent;
+          });
+          return movie;
+        });
         delete data.MovieList;
         return res.json(data);
       });

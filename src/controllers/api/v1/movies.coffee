@@ -7,7 +7,13 @@ movies =
     ,
       (err, response, body)->
         data = JSON.parse(body)
-        data.movies = data.MovieList
+        data.movies = data.MovieList.map((movie)->
+          movie.items = movie.items.map((torrent)->
+            torrent.movie = movie.id
+            torrent
+          )
+          movie
+        )
         delete data.MovieList
         res.json data
     )

@@ -1,5 +1,5 @@
 (function() {
-  var store, torrents, _;
+  var store, subtitles, torrents, _;
 
   _ = require('lodash');
 
@@ -7,10 +7,15 @@
 
   torrents = require('./../controllers/torrents').torrents;
 
+  subtitles = require('./../controllers/subtitles').subtitles;
+
   module.exports = function(io) {
     return io.sockets.on("connection", function(socket) {
-      socket.on("torrent_get", function(link) {
-        return torrents.get(link, socket);
+      socket.on("torrent_get", function(torrent) {
+        return torrents.get(torrent.torrent_url, socket);
+      });
+      socket.on("subtitles_get", function(video) {
+        return subtitles.get(video, socket);
       });
       socket.on("torrent_pause", torrents.pause);
       socket.on("torrent_resume", torrents.resume);

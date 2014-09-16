@@ -2,11 +2,15 @@ _         = require('lodash')
 #progress = require("./progressbar")
 store     = require('./../store')
 torrents  = require('./../controllers/torrents').torrents
+subtitles = require('./../controllers/subtitles').subtitles
 
 module.exports = (io) ->
   io.sockets.on "connection", (socket) ->
-    socket.on "torrent_get", (link)->
-      torrents.get(link, socket)
+    socket.on "torrent_get", (torrent)->
+      torrents.get(torrent.torrent_url, socket)
+
+    socket.on "subtitles_get", (video)->
+      subtitles.get(video, socket)
 
     socket.on "torrent_pause", torrents.pause
 

@@ -38,7 +38,11 @@
 
   util.inherits(omx, EventEmitter);
 
-  omx.prototype.play = function(file, opts) {
+  omx.prototype.play = function(file, subtitle, opts) {
+    if (subtitle) {
+      opts = opts || defaults;
+      opts.push("--sub-file=" + subtitle);
+    }
     if (!file) {
       return this.pause();
     }
@@ -54,6 +58,7 @@
   omx.prototype.init = function(file, opts) {
     var cmdOptions, playerPath;
     cmdOptions = (opts || defaults).join(" ");
+    console.log(cmdOptions);
     playerPath = os.platform() === 'darwin' ? '/Applications/VLC.app/Contents/MacOS/VLC' : 'vlc';
     this.player = exec(playerPath + " " + cmdOptions + " \"" + file + "\"");
     this.emit("playing", file);

@@ -37,8 +37,11 @@ util.inherits omx, EventEmitter
 
 # start playing.. before make sure to
 # shutdown any existing instance
-omx::play = (file, opts) ->
+omx::play = (file, subtitle,  opts) ->
 
+  if subtitle
+    opts = (opts or defaults)
+    opts.push("--subtitles #{subtitle}")
   # toggle between play and pause if no file
   # was passed in.
   return @pause()  unless file

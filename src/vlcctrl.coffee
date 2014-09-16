@@ -41,8 +41,11 @@ util.inherits omx, EventEmitter
 
 # start playing.. before make sure to
 # shutdown any existing instance
-omx::play = (file, opts) ->
+omx::play = (file, subtitle, opts) ->
 
+  if subtitle
+    opts = (opts or defaults)
+    opts.push("--sub-file=#{subtitle}")
   # toggle between play and pause if no file
   # was passed in.
   return @pause()  unless file
@@ -62,6 +65,7 @@ omx::play = (file, opts) ->
 # fire up omxplayer
 omx::init = (file, opts) ->
   cmdOptions = (opts or defaults).join(" ")
+  console.log cmdOptions
   playerPath = if os.platform() == 'darwin' then '/Applications/VLC.app/Contents/MacOS/VLC' else 'vlc'
   #We should check so that the player really exist.
   @player = exec(playerPath + " " + cmdOptions + " \"" + file + "\"")

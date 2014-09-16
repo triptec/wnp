@@ -46,7 +46,11 @@
 
   util.inherits(omx, EventEmitter);
 
-  omx.prototype.play = function(file, opts) {
+  omx.prototype.play = function(file, subtitle, opts) {
+    if (subtitle) {
+      opts = opts || defaults;
+      opts.push("--subtitles " + subtitle);
+    }
     if (!file) {
       return this.pause();
     }

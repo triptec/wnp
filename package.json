@@ -1,6 +1,6 @@
 {
   "name": "wnp",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Who needs popcorn",
   "main": "index.js",
   "scripts": {
